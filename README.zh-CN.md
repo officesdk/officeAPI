@@ -2,7 +2,7 @@
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.svg">
-  <img src="assets/logo-light.svg" alt="officekit" width="300">
+  <img src="assets/logo-light.svg" alt="OfficeAPI" width="300">
 </picture>
 
 ### 让程序和 AI 直接读写 Word、Excel、PowerPoint
@@ -48,37 +48,37 @@ Word、Excel、PPT、WPS、UOF、ODF、PDF 等 33 种输入格式，输出 Offic
 </tr>
 </table>
 
-![架构：AI Agent、业务系统和 App 通过 MCP 或命令行调用 officekit，得到 Office 文件、PDF、OFD、预览图和检查报告](assets/architecture-zh.png)
+![架构：AI Agent、业务系统和 App 通过 MCP 或命令行调用 OfficeAPI，得到 Office 文件、PDF、OFD、预览图和检查报告](assets/architecture-zh.png)
 
 ## 快速开始
 
 **转换文件**
 
 ```sh
-officekit convert report.doc --to docx
-officekit convert report.docx --to pdf                 # 矢量 PDF
-officekit convert report.docx --to pdf --raster        # 纯图 PDF
-officekit convert budget.et --to ofd
-officekit convert deck.pptx --to png --pages 1-3 --out-dir thumbs/
+officeapi convert report.doc --to docx
+officeapi convert report.docx --to pdf                 # 矢量 PDF
+officeapi convert report.docx --to pdf --raster        # 纯图 PDF
+officeapi convert budget.et --to ofd
+officeapi convert deck.pptx --to png --pages 1-3 --out-dir thumbs/
 ```
 
 **修改、渲染、检查**
 
 ```sh
-officekit run edit.js --in deck.pptx --out out.pptx    # 运行一段 Office.js 脚本
-officekit render deck.pptx --slides 1-3 --width 1280 --out-dir png/
-officekit inspect deck.pptx --json                     # 输出问题清单
+officeapi run edit.js --in deck.pptx --out out.pptx    # 运行一段 Office.js 脚本
+officeapi render deck.pptx --slides 1-3 --width 1280 --out-dir png/
+officeapi inspect deck.pptx --json                     # 输出问题清单
 ```
 
 **接入你的 AI**
 
 ```sh
-claude mcp add officekit -- officekit mcp --stdio
+claude mcp add officeapi -- officeapi mcp --stdio
 ```
 
 其他 MCP 客户端见[接入 MCP](#接入-mcp)。
 
-## 为什么用 officekit
+## 为什么用 OfficeAPI
 
 - **无依赖。** 只有一个二进制文件。不需要 Office、LibreOffice、Java、Python，也不需要字体以外的任何系统组件。
 - **哪里都能跑。** Windows、macOS、Linux、Android、iOS、HarmonyOS，同一个引擎跑在服务器、桌面和手机上，用户设备上也能离线处理文档。
@@ -156,7 +156,7 @@ PowerPoint 和 Word 的三张图都是真实运行结果：用户文件和 AI �
 
 如果输入的文件是你自己的几套模板、要做的修改是固定的几种（往固定位置填数据、生成固定结构的报告），用模板加开源库定制开发就能做好，成本更低。
 
-officekit 的 AI 编辑器为**事先不确定**的情况设计：
+OfficeAPI 的 AI 编辑器为**事先不确定**的情况设计：
 
 1. 输入是用户自带的任意文件，模板五花八门；
 2. 修改要求由用户用自然语言提出，由 AI 现场决定怎么改；
@@ -164,11 +164,11 @@ officekit 的 AI 编辑器为**事先不确定**的情况设计：
 4. 不能或不想在服务器上运行 Office；
 5. 已经有基于 Office.js（Office 加载项）写的代码，想搬到后台运行。
 
-满足得越多，officekit 越合适。
+满足得越多，OfficeAPI 越合适。
 
 ### PPT 即代码
 
-AI 用 officekit 做的每一份 PPT，都可以留下一份生成它的脚本。同一段脚本运行两次，生成的文件逐字节相同。
+AI 用 OfficeAPI 做的每一份 PPT，都可以留下一份生成它的脚本。同一段脚本运行两次，生成的文件逐字节相同。
 
 - **微调便宜**：「换主色」「所有标题加大一号」只改脚本里一个变量，重跑即可，每一页都一致生效。
 - **能审阅、能回退**：脚本放进 git，每次改了什么一目了然。
@@ -179,10 +179,10 @@ AI 用 officekit 做的每一份 PPT，都可以留下一份生成它的脚本�
 
 ## 典型场景
 
-- **AI 修改用户自带的文档。** 用户上传公司模板或旧文件，说「把第 3 页改成两栏」「全篇换成公司字体」。文件和要求都是事先不知道的，没法针对模板写程序。officekit 让 AI 直接在原文件上改，没碰的格式原样保留，改完自查再交付。
-- **文档翻译和本地化。** 中文翻成英文、德文后，译文通常长得多，填回去大量文本框溢出。officekit 列出每个溢出的文本框和溢出量，AI 据此缩小字号、调整文本框或精简译文，循环到没有问题；剩下少数处理不了的再交给排版人员。
-- **Office 加载项搬到后台。** 用 Office.js 写的加载项只能在用户打开 Office 时运行。officekit 让同一段代码不用修改直接在服务端运行，用于后台批量处理，或者在持续集成里自动测试加载项逻辑。
-- **大量 AI 会话同时处理文档。** AI Agent 平台、AI 办公产品里，同时有大量用户让 AI 生成和修改文档。不必给每个会话开一个装着 Python 和 LibreOffice 的容器：officekit 一个进程承载多个会话，每个会话的脚本在独立沙箱里运行，有内存和时间上限。
+- **AI 修改用户自带的文档。** 用户上传公司模板或旧文件，说「把第 3 页改成两栏」「全篇换成公司字体」。文件和要求都是事先不知道的，没法针对模板写程序。OfficeAPI 让 AI 直接在原文件上改，没碰的格式原样保留，改完自查再交付。
+- **文档翻译和本地化。** 中文翻成英文、德文后，译文通常长得多，填回去大量文本框溢出。OfficeAPI 列出每个溢出的文本框和溢出量，AI 据此缩小字号、调整文本框或精简译文，循环到没有问题；剩下少数处理不了的再交给排版人员。
+- **Office 加载项搬到后台。** 用 Office.js 写的加载项只能在用户打开 Office 时运行。OfficeAPI 让同一段代码不用修改直接在服务端运行，用于后台批量处理，或者在持续集成里自动测试加载项逻辑。
+- **大量 AI 会话同时处理文档。** AI Agent 平台、AI 办公产品里，同时有大量用户让 AI 生成和修改文档。不必给每个会话开一个装着 Python 和 LibreOffice 的容器：OfficeAPI 一个进程承载多个会话，每个会话的脚本在独立沙箱里运行，有内存和时间上限。
 - **批量格式转换。** 档案数字化、信创迁移、文档归档：把 WPS、UOF、老版 Office 文件统一转成 OOXML 或 OFD，或者批量生成 PDF 和缩略图。服务端、桌面端、移动端用同一个二进制。
 
 ## 接入 MCP
@@ -190,7 +190,7 @@ AI 用 officekit 做的每一份 PPT，都可以留下一份生成它的脚本�
 Claude Code：
 
 ```sh
-claude mcp add officekit -- officekit mcp --stdio
+claude mcp add officeapi -- officeapi mcp --stdio
 ```
 
 其他支持 MCP 的客户端：
@@ -198,8 +198,8 @@ claude mcp add officekit -- officekit mcp --stdio
 ```json
 {
   "mcpServers": {
-    "officekit": {
-      "command": "officekit",
+    "officeapi": {
+      "command": "officeapi",
       "args": ["mcp", "--stdio"]
     }
   }
@@ -267,5 +267,5 @@ claude mcp add officekit -- officekit mcp --stdio
 | | 结果 |
 | --- | --- |
 | **与 PowerPoint 的一致性** | 以 Windows 上的真实 PowerPoint 为对照：生成的文件必须能被 PowerPoint 直接打开且不提示修复；86 个对照脚本（其中 13 个是微软官方示例）在两边分别运行，逐项比对结果 |
-| **AI 好不好用** | 让 Claude 只通过 officekit 完成 8 项典型任务（按大纲做汇报、改现成的 PPT、用数据做图表、按问题清单修版面、4:3 改 16:9、插图片、批量统一格式、中文长文排版），8 项全部完成，总花费 0.81 美元 |
+| **AI 好不好用** | 让 Claude 只通过 OfficeAPI 完成 8 项典型任务（按大纲做汇报、改现成的 PPT、用数据做图表、按问题清单修版面、4:3 改 16:9、插图片、批量统一格式、中文长文排版），8 项全部完成，总花费 0.81 美元 |
 | **速度** | 100 页、2000 个元素的演示文稿：一次添加 1000 个元素 0.23 秒，保存 0.085 秒，渲染一页 0.22 秒，检查全部 100 页 1.8 秒（单机测试） |

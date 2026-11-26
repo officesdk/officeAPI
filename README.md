@@ -2,7 +2,7 @@
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.svg">
-  <img src="assets/logo-light.svg" alt="officekit" width="300">
+  <img src="assets/logo-light.svg" alt="OfficeAPI" width="300">
 </picture>
 
 ### Word, Excel and PowerPoint for code and AI.
@@ -48,37 +48,37 @@ A headless editor built for AI. The AI writes Office.js, the API it already know
 </tr>
 </table>
 
-![Architecture: AI agents, business systems and apps call officekit over MCP or the command line and get Office files, PDF, OFD, previews and check reports](assets/architecture.png)
+![Architecture: AI agents, business systems and apps call OfficeAPI over MCP or the command line and get Office files, PDF, OFD, previews and check reports](assets/architecture.png)
 
 ## Quick start
 
 **Convert a file**
 
 ```sh
-officekit convert report.doc --to docx
-officekit convert report.docx --to pdf                 # vector PDF
-officekit convert report.docx --to pdf --raster        # raster PDF
-officekit convert budget.et --to ofd
-officekit convert deck.pptx --to png --pages 1-3 --out-dir thumbs/
+officeapi convert report.doc --to docx
+officeapi convert report.docx --to pdf                 # vector PDF
+officeapi convert report.docx --to pdf --raster        # raster PDF
+officeapi convert budget.et --to ofd
+officeapi convert deck.pptx --to png --pages 1-3 --out-dir thumbs/
 ```
 
 **Edit, render and check**
 
 ```sh
-officekit run edit.js --in deck.pptx --out out.pptx    # run an Office.js script
-officekit render deck.pptx --slides 1-3 --width 1280 --out-dir png/
-officekit inspect deck.pptx --json                     # print the issue list
+officeapi run edit.js --in deck.pptx --out out.pptx    # run an Office.js script
+officeapi render deck.pptx --slides 1-3 --width 1280 --out-dir png/
+officeapi inspect deck.pptx --json                     # print the issue list
 ```
 
 **Connect it to your AI**
 
 ```sh
-claude mcp add officekit -- officekit mcp --stdio
+claude mcp add officeapi -- officeapi mcp --stdio
 ```
 
 Other MCP clients: see [Use with MCP](#use-with-mcp).
 
-## Why officekit
+## Why OfficeAPI
 
 - **No dependencies.** One binary. No Office, LibreOffice, Java or Python, and no system components other than fonts.
 - **Runs everywhere.** Windows, macOS, Linux, Android, iOS and HarmonyOS. The same engine runs on servers, desktops and phones, so documents can be processed offline on the user's device.
@@ -156,7 +156,7 @@ Make the table a three-line table, right-align the numbers, highlight the city w
 
 If the input files are a few templates of your own and the edits are a fixed set (fill data into fixed places, generate reports with a fixed structure), templates plus an open-source library will do the job at lower cost.
 
-officekit's AI editor is for cases where **you don't know in advance**:
+OfficeAPI's AI editor is for cases where **you don't know in advance**:
 
 1. the input is whatever file the user brings, with any template;
 2. the user asks for the change in plain language, and the AI decides how to make it;
@@ -164,11 +164,11 @@ officekit's AI editor is for cases where **you don't know in advance**:
 4. you can't or don't want to run Office on the server;
 5. you already have Office.js (Office add-in) code and want to run it in the background.
 
-The more of these apply, the better officekit fits.
+The more of these apply, the better OfficeAPI fits.
 
 ### Slides as code
 
-Every deck the AI builds with officekit can keep the script that produced it. Run the same script twice and the files are byte-for-byte identical.
+Every deck the AI builds with OfficeAPI can keep the script that produced it. Run the same script twice and the files are byte-for-byte identical.
 
 - **Cheap tweaks**: "change the main color" or "make every title one size larger" is one variable in the script; run it again and every slide follows.
 - **Reviewable and reversible**: put the script in git and every change is visible.
@@ -179,10 +179,10 @@ Once someone edits the file by hand in Office, rerunning the full script overwri
 
 ## Typical uses
 
-- **AI edits documents users bring.** A user uploads a company template or an old file and asks to "make slide 3 two columns" or "switch the whole document to our company font". Neither the file nor the request is known in advance, so you can't write code against the template. officekit lets the AI edit the original file directly, keeps untouched formatting as it was, and checks the result before handing it back.
-- **Translation and localization.** Translations into English or German usually run much longer than the source, and many text boxes overflow when the text goes back in. officekit lists every overflowing text box and by how much; the AI shrinks fonts, resizes boxes or tightens the translation, looping until nothing is left. The few cases it can't handle go to a layout person.
-- **Office add-ins in the background.** An add-in written in Office.js only runs while a user has Office open. officekit runs the same code on the server unchanged, for background batch jobs or for testing add-in logic in CI.
-- **Many AI sessions working on documents at once.** On AI agent platforms and AI office products, many users ask the AI to create and edit documents at the same time. There is no need to give each session a container with Python and LibreOffice: one officekit process serves many sessions, and each session's scripts run in their own sandbox with memory and time limits.
+- **AI edits documents users bring.** A user uploads a company template or an old file and asks to "make slide 3 two columns" or "switch the whole document to our company font". Neither the file nor the request is known in advance, so you can't write code against the template. OfficeAPI lets the AI edit the original file directly, keeps untouched formatting as it was, and checks the result before handing it back.
+- **Translation and localization.** Translations into English or German usually run much longer than the source, and many text boxes overflow when the text goes back in. OfficeAPI lists every overflowing text box and by how much; the AI shrinks fonts, resizes boxes or tightens the translation, looping until nothing is left. The few cases it can't handle go to a layout person.
+- **Office add-ins in the background.** An add-in written in Office.js only runs while a user has Office open. OfficeAPI runs the same code on the server unchanged, for background batch jobs or for testing add-in logic in CI.
+- **Many AI sessions working on documents at once.** On AI agent platforms and AI office products, many users ask the AI to create and edit documents at the same time. There is no need to give each session a container with Python and LibreOffice: one OfficeAPI process serves many sessions, and each session's scripts run in their own sandbox with memory and time limits.
 - **Batch format conversion.** Archive digitization, migration to domestic platforms, document archiving: convert WPS, UOF and legacy Office files to OOXML or OFD, or generate PDFs and thumbnails in bulk. The same binary runs on servers, desktops and mobile devices.
 
 ## Use with MCP
@@ -190,7 +190,7 @@ Once someone edits the file by hand in Office, rerunning the full script overwri
 Claude Code:
 
 ```sh
-claude mcp add officekit -- officekit mcp --stdio
+claude mcp add officeapi -- officeapi mcp --stdio
 ```
 
 Any other client that supports MCP:
@@ -198,8 +198,8 @@ Any other client that supports MCP:
 ```json
 {
   "mcpServers": {
-    "officekit": {
-      "command": "officekit",
+    "officeapi": {
+      "command": "officeapi",
       "args": ["mcp", "--stdio"]
     }
   }
@@ -267,5 +267,5 @@ Every issue comes with the page number and the paragraph or table index, so the 
 | | Result |
 | --- | --- |
 | **Consistency with PowerPoint** | Checked against real PowerPoint on Windows: generated files must open in PowerPoint without a repair prompt; 86 reference scripts (13 of them Microsoft's official samples) run on both sides and the results are compared item by item |
-| **Usability for AI** | Claude, using only officekit, completed 8 typical tasks (deck from an outline, editing an existing deck, charts from data, fixing layout from the issue list, 4:3 to 16:9, inserting images, bulk formatting, long Chinese text layout): all 8 done, US$0.81 in total |
+| **Usability for AI** | Claude, using only OfficeAPI, completed 8 typical tasks (deck from an outline, editing an existing deck, charts from data, fixing layout from the issue list, 4:3 to 16:9, inserting images, bulk formatting, long Chinese text layout): all 8 done, US$0.81 in total |
 | **Speed** | A 100-slide deck with 2,000 elements: adding 1,000 elements in one go 0.23 s, saving 0.085 s, rendering a slide 0.22 s, checking all 100 slides 1.8 s (single machine) |
